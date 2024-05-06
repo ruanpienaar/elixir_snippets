@@ -1,0 +1,164 @@
+- MapSet - experiment with data structure
+
+- iolist/iodevice - write example code 
+  - create own shell app, that can audit cmds, and capture responses and store them
+    - iolist = []
+      iolist = [iolist, "more input"]
+      iolist = [iolist, "even more"]
+
+- create with example code ( also use latest with considerations? uniform with-func-return types )
+
+- read anti patterns
+  - https://hexdocs.pm/elixir/what-anti-patterns.html
+
+- Stream 
+  - write code to show case streams
+    - create Stream
+    - Enum.to_list(stream)
+
+- app-sup structure add to Peony
+- move peony to umbrella
+
+- ecto
+  - how can we make migrations/schema a little nicer?
+  - how to use schema and/or type checking to make inserts safer?
+  - How could you get Ecto to create NOT-NULL fields in the database from code ?
+
+- create your own mix release and see how to 
+  - install it ? 
+  - run as docker container
+
+- create tests / run tests with mix
+  - look into proper again 
+
+- credo config
+  - allow space in arguments ( first space )
+
+- look into elixir macros and why their logging is so messy
+  https://hexdocs.pm/elixir/macros.html
+
+- extra_applications? 
+  - how can i have observer, wx etc as extra applications, but exclude them from the prod build?
+
+whats the app compiler ? ( is this a choice of compiler per app src ? )
+  • :compilers - compilers to run, defaults to Mix.compilers/0, which are
+    [:erlang, :elixir, :app].
+$ mix help compile.elixir
+$ mix help compile.erlang
+  -- :app Simply creates app file: "mix compile.app       # Writes an .app file":
+
+mix compile.app       # Writes an .app file
+mix compile.elixir    # Compiles Elixir source files
+mix compile.erlang    # Compiles Erlang source files
+mix compile.leex      # Compiles Leex source files
+mix compile.protocols # Consolidates all protocols in all paths
+mix compile.yecc      # Compiles Yecc source files
+
+
+
+whats protocols in Elixir
+mix compile.protocols
+
+
+
+
+deps versions ( check Elixir Versions docs again , >=, ~, == etc )
+  - updated README, but have a proper read of docs page:
+    https://hexdocs.pm/elixir/Version.html
+
+
+umbrella projects ( what are umbrella projeccts ?  is it just the dir structure and deps ? )
+  - dig a little as to why this is useful ?
+  ( is this the same as rebar3 apps/ ? )
+  ( is this so that multiple .app files can be shipped in one repo/release ? )
+
+
+Can you use mix ( skeletons / boiler plate ) to create/add another app in a umbrella project?
+
+
+how to create your own elixir formatter?
+ -  https://dev.to/scapybara/how-to-write-an-elixir-code-formatter-1ck4
+is there a industry standard ? Bit like Elvis for erlang?
+
+
+
+GenServer - format_status - make a nice generic print for this
+GenServer - create continue example
+
+
+trap_exit? how is that done??
+# TODO: how do we trap_exit?
+    {:ok, _} = System.trap_signal(:sigabrt, fn -> IO.puts("trap abort") end)
+
+
+
+supervisor significant children
+
+
+dialyzer 
+  - add smarter options to Dialixir config https://hexdocs.pm/dialyxir/Mix.Tasks.Dialyzer.html#summary 
+    mix help dialyzer
+  - dialyzer takes too long, reduce the otp apps added ( check pond mix.exs )
+
+
+Hex - how is this erlang package mangager works?
+
+
+Profiling - do this with mix.
+  cprof 
+  eprof
+  fprof 
+
+
+
+- Registry - create example ( {via, term, pid} )
+
+
+
+
+
+Simple proc, why tight loop would create a long list of exceptions, my suspisciouns are each loop does:
+
+iex(1)> Earth.Animals.Whale.start_link(:moby_dick, nil)
+{:ok, #PID<0.198.0>}
+Elixir.Earth.Animals.Whale hunger level is 0
+Elixir.Earth.Animals.Whale hunger level is -1
+iex(2)> Earth.Animals.Whale.start_link(:moby_dick, nil)
+** (ArgumentError) could not register #PID<0.200.0> with name :moby_dick because it is not alive, the name is already taken, or it has already been given another name
+    (elixir 1.16.2) lib/process.ex:698: Process.register(#PID<0.200.0>, :moby_dick)
+    (Earth 0.1.0) lib/earth/animals/whale.ex:12: Earth.Animals.Whale.start_link/2
+    iex:2: (file)
+iex(2)> Earth.Animals.Whale.feed(:moby_dick, :a)
+{:ok, :fed}
+
+15:29:06.235 [error] ** (ArithmeticError) bad argument in arithmetic expression
+    (erts 14.2.3) :erlang.+(-2, :a)
+    (Earth 0.1.0) lib/earth/animals/whale.ex:52: Earth.Animals.Whale.loop/1
+    (Earth 0.1.0) lib/earth/animals/whale.ex:60: Earth.Animals.Whale.loop/1
+    (stdlib 5.2.1) proc_lib.erl:241: :proc_lib.init_p_do_apply/3
+
+
+15:29:06.237 [error] ** (ArithmeticError) bad argument in arithmetic expression
+    (erts 14.2.3) :erlang.+(-2, :a)
+    (Earth 0.1.0) lib/earth/animals/whale.ex:52: Earth.Animals.Whale.loop/1
+    (Earth 0.1.0) lib/earth/animals/whale.ex:60: Earth.Animals.Whale.loop/1
+    (stdlib 5.2.1) proc_lib.erl:241: :proc_lib.init_p_do_apply/3
+
+
+15:29:06.238 [error] ** (ArithmeticError) bad argument in arithmetic expression
+    (erts 14.2.3) :erlang.+(-2, :a)
+    (Earth 0.1.0) lib/earth/animals/whale.ex:52: Earth.Animals.Whale.loop/1
+    (Earth 0.1.0) lib/earth/animals/whale.ex:60: Earth.Animals.Whale.loop/1
+    (stdlib 5.2.1) proc_lib.erl:241: :proc_lib.init_p_do_apply/3
+
+** (EXIT from #PID<0.197.0>) shell process exited with reason: an exception was raised:
+    ** (ArithmeticError) bad argument in arithmetic expression
+        (erts 14.2.3) :erlang.+(-2, :a)
+        (Earth 0.1.0) lib/earth/animals/whale.ex:52: Earth.Animals.Whale.loop/1
+        (Earth 0.1.0) lib/earth/animals/whale.ex:60: Earth.Animals.Whale.loop/1
+        (stdlib 5.2.1) proc_lib.erl:241: :proc_lib.init_p_do_apply/3
+
+
+
+- Agent
+  - why is this crashing with capture operator?

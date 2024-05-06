@@ -1,0 +1,12 @@
+CREATE TABLE customer (
+	customer_id SERIAL,
+	name VARCHAR,
+	email VARCHAR,
+	phone INT4,
+	address VARCHAR,
+	registered BOOL,
+	age INT2
+);
+
+INSERT INTO customer (name, email, phone, address, registered, age) VALUES ('name', 'email', 123456789, 'Address', true, 21);
+INSERT INTO customer (name, email, phone, address, registered, age) VALUES ('Ronnald McDonnald', 'ronnald@mcds.com', 987654321, '1 Drive Through', false, 99);
