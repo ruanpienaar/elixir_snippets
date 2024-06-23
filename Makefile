@@ -2,8 +2,11 @@
 
 build: deps_get compile
 
-shell: build
+shell:
 	iex -S mix
+
+node:
+	iex 
 
 check: credo dialyzer test
 
@@ -14,6 +17,9 @@ credo:
 dialyzer:
 	mix dialyzer
 
+phoenix:
+	iex --sname elixir --cookie cookie -S mix phx.server
+
 #
 #
 #Common Elixir ENV vars ---
@@ -23,8 +29,8 @@ dialyzer:
 # MIX_ARCHIVES = Custom archive install location
 # MIX_HOME = (defaults to ~/.mix)
 
-iex_node:
-	elixir --sname node -S mix run --no-halt
+node:
+	iex --sname node --cookie oreo -S mix
 
 #
 #
