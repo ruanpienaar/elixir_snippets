@@ -6,5 +6,15 @@ defmodule CrellWeb.NodeHTML do
   """
   use CrellWeb, :html
 
+  # NB: Either Embeded templates OR def ACTION(assigns) do function
+
   embed_templates "node_html/*"
+
+  # def nodes(%{:conn => conn} = assigns) do
+  #   # IO.inspect(conn)
+  #   string = "bla"
+  #   ~H"""
+  #   Hello! assigns: <% @params %>
+  #   """
+  # end
 end

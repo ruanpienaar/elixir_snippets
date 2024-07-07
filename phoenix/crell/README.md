@@ -1,18 +1,18 @@
 # Crell
 
-To start your Phoenix server:
+## Notes
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+### web
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+#### templates
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+NB!
 
-## Learn more
+`<% @node %>` executes code only
+`<%= @node %>` executes and shows return value in template
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+#### rendering:
+
+```psuedo
+ROOT( APP( VIEW() ) )
+```

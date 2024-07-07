@@ -1,10 +1,16 @@
 defmodule CrellWeb.NodeController do
   use CrellWeb, :controller
 
-  def list(conn, params) do
-    IO.inspect(params)
+  def node(conn, %{"node" => node}) do
+    render(conn, :node, node: node)
+  end
+
+  def nodes(conn, params) do
+    # IO.inspect(params)
     # The home page is often custom made,
     # so skip the default app layout.
-    render(conn, :list, params: params, conn: conn)
+    {:ok, params_json} = Jason.encode(params)
+    nodes = Node.list()
+    render(conn, :nodes, %{params: params_json, nodes: nodes})
   end
 end

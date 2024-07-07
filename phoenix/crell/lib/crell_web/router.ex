@@ -17,7 +17,8 @@ defmodule CrellWeb.Router do
   scope "/", CrellWeb do
     pipe_through :browser
 
-    get "/", NodeController, :list
+    get "/", NodeController, :nodes
+    get "/:node", NodeController, :node
   end
 
   # Other scopes may use custom stacks.
