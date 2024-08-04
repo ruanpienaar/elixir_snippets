@@ -56,6 +56,7 @@ defmodule HelloWeb.Endpoint do
 
   @doc """
     Example function plug ( function-plug / module-plug )
+    plug PLUG (:function | Module)
   """
   def introspect(conn, opts) do
     IO.puts """
