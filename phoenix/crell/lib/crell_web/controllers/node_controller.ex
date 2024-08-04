@@ -13,4 +13,9 @@ defmodule CrellWeb.NodeController do
     nodes = Node.list()
     render(conn, :nodes, %{params: params_json, nodes: nodes})
   end
+
+  def add_node(conn, %{"node" => node, "cookie" => cookie}) do
+    :hawk.add_connect_callback()
+  end
+
 end

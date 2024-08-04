@@ -11,4 +11,15 @@
     <div>
         <%= @nodes %>
     </div>
+
+    <div>
+        <form action="add_node" method="post">
+            <label for="node">Node</label>
+            <input type="text" name="node" />
+            <label for="cookie">Cookie</label>
+            <input type="text" name="cookie" />
+            <button type="submit" onsubmit="add_node">Add Node</button>
+        </form>
+    </div>
+
 </div>

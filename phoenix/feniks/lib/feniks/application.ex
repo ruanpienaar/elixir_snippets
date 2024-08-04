@@ -1,22 +1,13 @@
 defmodule Feniks.Application do
-
   use Application
+  alias Telemetry.Metrics
 
   @impl true
   def start(_type, _args) do
     Supervisor.start_link(
       _children = [
-        # Telemtry 
-        # Ecto.Repo
-        # DnsCluster
-        # Phoenix.PubSub
-        # finch
-        # Endpoint
-        
-        # TODO: Place all of the above in Feniks.Supervisor
-        
-        Feniks.Supervisor
-        
+        Feniks.WebSupervisor,
+        {TelemetryMetricsPrometheus, [metrics: metrics()]},
       ],
       _opts = [
         strategy: :one_for_one,
@@ -24,13 +15,12 @@ defmodule Feniks.Application do
       ]
     )
   end
-  
-#    # Tell Phoenix to update the endpoint configuration
-#  # whenever the application is updated.
-#  @impl true
-#  def config_change(changed, _new, removed) do
-#    BlankWeb.Endpoint.config_change(changed, removed)
-#    :ok
-#  end
+
+  defp metrics, do:
+  [
+    Metrics.counter("http.request.count"),
+    Metrics.sum("http.request.payload_size", unit: :byte),
+    Metrics.last_value("vm.memory.total", unit: :byte)
+  ]
 
 end
