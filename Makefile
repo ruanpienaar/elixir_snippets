@@ -12,7 +12,7 @@ check: credo dialyzer test
 
 credo:
 	mix credo
-	
+
 # !NB requires dialyxir ( Elixir dialyzer lib )
 dialyzer:
 	mix dialyzer
@@ -127,7 +127,7 @@ app_config:
 
 
 # make ARGS="--permanent" app_start
-app_start: 
+app_start:
 	mix app.start $(ARGS)
 # Starts all registered apps.
 
@@ -192,7 +192,7 @@ app_tree:
 
 
 # NOTE: Archives should mostly be used for extending Mix with plugins and not much else.
-# make ARGS="" archive 
+# make ARGS="" archive
 archive:
 	mix archive $(ARGS)
 # Lists all installed archives.
@@ -213,7 +213,7 @@ archive:
 # mix archive.uninstall # Uninstalls archives
 
 
-# make ARGS="--deps" clean 
+# make ARGS="--deps" clean
 clean:
 	mix clean $(ARGS)
 # Deletes generated application files.
