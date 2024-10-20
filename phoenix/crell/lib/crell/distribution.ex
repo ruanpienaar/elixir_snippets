@@ -6,7 +6,7 @@ defmodule Crell.Distribution do
   import Ecto.Query, warn: false
   alias Crell.Repo
 
-  alias Crell.Distribution.Node
+  alias Crell.Distribution.Node, as: CrellNode
 
   @doc """
   Returns the list of nodes.
@@ -18,7 +18,7 @@ defmodule Crell.Distribution do
 
   """
   def list_nodes do
-    Repo.all(Node)
+    Repo.all(CrellNode)
   end
 
   @doc """
@@ -35,7 +35,7 @@ defmodule Crell.Distribution do
       ** (Ecto.NoResultsError)
 
   """
-  def get_node!(id), do: Repo.get!(Node, id)
+  def get_node!(id), do: Repo.get!(CrellNode, id)
 
   @doc """
   Creates a node.
@@ -50,8 +50,8 @@ defmodule Crell.Distribution do
 
   """
   def create_node(attrs \\ %{}) do
-    %Node{}
-    |> Node.changeset(attrs)
+    %CrellNode{}
+    |> CrellNode.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -67,9 +67,9 @@ defmodule Crell.Distribution do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_node(%Node{} = node, attrs) do
+  def update_node(%CrellNode{} = node, attrs) do
     node
-    |> Node.changeset(attrs)
+    |> CrellNode.changeset(attrs)
     |> Repo.update()
   end
 
@@ -85,7 +85,7 @@ defmodule Crell.Distribution do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_node(%Node{} = node) do
+  def delete_node(%CrellNode{} = node) do
     Repo.delete(node)
   end
 
@@ -98,7 +98,49 @@ defmodule Crell.Distribution do
       %Ecto.Changeset{data: %Node{}}
 
   """
-  def change_node(%Node{} = node, attrs \\ %{}) do
-    Node.changeset(node, attrs)
+  def change_node(%CrellNode{} = node, attrs \\ %{}) do
+    CrellNode.changeset(node, attrs)
   end
+
+  # Management cide
+
+  def connected_nodes() do
+    Node.list([:visible, :hidden])
+  end
+
+  def hawk_add_node(node_name, cookie) when is_binary(node_name) and is_binary(cookie) do
+    node_atom = String.to_atom(node_name)
+    cookie_atom = String.to_atom(cookie)
+    connected_callback = fn -> :io.format(~c"Node connected") end
+    disconnected_callback = fn -> :io.format(~c"Node disconnected") end
+
+    connected_callbacks = [{:crell_connect, connected_callback}]
+    disconnected_callbacks = [{:crell_disconnect,disconnected_callback}]
+
+    case :hawk.node_exists(node_atom) do
+      {:ok, _pid, callbacks} ->
+        case :lists.member(:crell_connect, callbacks) and :lists.member(:crell_disconnect, callbacks) do
+          true ->
+            :ok
+          false ->
+            {:ok,{_, :updated}} = :hawk.add_connect_callback(node_atom, connected_callbacks)
+            {:ok,{_, :updated}} = :hawk.add_disconnect_callback(node_atom, disconnected_callbacks)
+            :ok
+        end
+      {:error, :no_such_node} ->
+        {:ok,_} = :hawk.add_node(node_atom, cookie_atom, connected_callbacks, disconnected_callbacks)
+        :ok
+    end
+  end
+
+  def hawk_remove_node(node_name) when is_binary(node_name) do
+    node_atom = String.to_atom(node_name)
+    case :hawk.remove_node(node_atom) do
+      {:error, :no_such_node} ->
+        :ok
+      :ok ->
+        :ok
+    end
+  end
+
 end

@@ -17,8 +17,16 @@ defmodule Crell.Application do
       # Start a worker by calling: Crell.Worker.start_link(arg)
       # {Crell.Worker, arg},
       # Start to serve requests, typically the last entry
-      CrellWeb.Endpoint
+      CrellWeb.Endpoint,
+      %{
+        :id => :startup,
+        :start => {Crell.Startup, :startup, []},
+        :restart => :temporary,
+        :type => :worker
+      }
     ]
+
+
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
