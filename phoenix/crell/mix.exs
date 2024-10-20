@@ -62,7 +62,8 @@ defmodule Crell.MixProject do
       # Extra deps
       {:hawk, github: "ruanpienaar/hawk", tag: "0.0.3"},
       {:recon, "~> 2.5"},
-      {:observer_cli, "~> 1.7"}
+      {:observer_cli, "~> 1.7"},
+      {:ecto_psql_extras, "~> 0.6"}
     ]
   end
 
