@@ -60,7 +60,8 @@ defmodule Crell.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       # Extra deps
-      {:hawk, github: "ruanpienaar/hawk", tag: "0.0.3"}
+      {:hawk, github: "ruanpienaar/hawk", tag: "0.0.3"},
+      {:recon, "~> 2.5"}
     ]
   end
 

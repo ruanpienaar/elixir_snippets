@@ -13,13 +13,16 @@
     </div>
 
     <div>
-        <form action="add_node" method="post">
-            <label for="node">Node</label>
-            <input type="text" name="node" />
-            <label for="cookie">Cookie</label>
-            <input type="text" name="cookie" />
-            <button type="submit" onsubmit="add_node">Add Node</button>
-        </form>
+
+        <.simple_form for={@form} phx-change="validate" phx-submit="save">
+            <.input field={@form[:node]} label="node" name="node" type="text" value="" />
+            <.input field={@form[:cookie]} label="cookie"  name="cookie"  type="text" value="" />
+            <:actions>
+                <.button>Save</.button>
+            </:actions>
+        </.simple_form>
+
     </div>
 
 </div>
+
