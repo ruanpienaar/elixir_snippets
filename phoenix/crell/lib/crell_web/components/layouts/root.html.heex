@@ -12,15 +12,10 @@
     </script>
   </head>
   <body class="bg-white antialiased">
-    <p>---- START ROOT inner_content ----</p>
-
     <div>
-      CSRF Token : <%= Phoenix.Controller.get_csrf_token() %>
+      <a href="/nodes">Nodes</a>
+      <a href="/nodes">Nodes</a>
     </div>
-
-    <!-- How can we get the routes from the backend ? -->
-    <div><a href="/">Nodes</a></div>
     <%= @inner_content %>
-    <p>---- END ROOT inner_content ----</p>
   </body>
 </html>

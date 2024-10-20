@@ -61,7 +61,8 @@ defmodule Crell.MixProject do
       {:bandit, "~> 1.5"},
       # Extra deps
       {:hawk, github: "ruanpienaar/hawk", tag: "0.0.3"},
-      {:recon, "~> 2.5"}
+      {:recon, "~> 2.5"},
+      {:observer_cli, "~> 1.7"}
     ]
   end
 
