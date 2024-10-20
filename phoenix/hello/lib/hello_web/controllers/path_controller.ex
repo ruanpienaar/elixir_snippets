@@ -6,7 +6,7 @@ defmodule HelloWeb.PathController do
   def handle_path(conn, params) do
     Logger.info(conn)
     Logger.info(params)
-    render(conn, :handle_path)
+    render(conn, :handle_path, layout: false)
   end
 
 end

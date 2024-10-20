@@ -1,11 +1,11 @@
 import Config
 
 # Configure your database
-config :world_clock, WorldClock.Repo,
+config :lv_ets_query, LvEtsQuery.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "world_clock_dev",
+  database: "lv_ets_query_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -16,17 +16,17 @@ config :world_clock, WorldClock.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
-config :world_clock, WorldClockWeb.Endpoint,
+config :lv_ets_query, LvEtsQueryWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 5000],
+  http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "VOEVfVrtCXnOCHgiZtOXDzAarMYROLh9UmVon6RwXw8mnULeFgmKjiWm6z8sRsUw",
+  secret_key_base: "HTkdaJxNCG1iMImirJ08+5Rntth905xeIxEkpKd0urIR1+VEOMASkU3Rc8XzA1F/",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:world_clock, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:world_clock, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:lv_ets_query, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:lv_ets_query, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -53,17 +53,17 @@ config :world_clock, WorldClockWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :world_clock, WorldClockWeb.Endpoint,
+config :lv_ets_query, LvEtsQueryWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/world_clock_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"lib/lv_ets_query_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :world_clock, dev_routes: true
+config :lv_ets_query, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
