@@ -1,3 +1,53 @@
+defmodule MyApp.MyComponent do
+  use Phoenix.LiveComponent
+
+  @impl true
+  def init(init_args) do
+    IO.inspect("init_args: #{inspect(init_args)}")
+    {:ok, %{modules: ["a"]}}
+  end
+
+  def render(assigns) do
+    IO.inspect(assigns, label: "MyComponentLabel")
+
+    ~H"""
+    <div>
+
+      <select>
+        <%= for {module_name, _module_path} <- assigns.modules do %>
+          <option>
+            <%= module_name %>
+          </option>
+        <% end %>
+      </select>
+      <.form phx-change="search" phx-submit="search" phx-target={@myself}>
+        <label for="module_filter">Module filter</label>
+        <input type="text" name="module_filter" id="module_filter" />
+        <button phx-click="clicked" phx-target={@myself}>Click Me</button>
+      </.form>
+    </div>
+    """
+  end
+
+  def handle_event("search", %{"module_filter" => search}, socket) do
+    IO.inspect("Search from textbox111")
+    # table_params = %{socket.assigns.table_params | search: search}
+    table_params = %{search: search}
+    to = PageBuilder.live_dashboard_path(socket, socket.assigns.page, table_params)
+    {:noreply, push_patch(socket, to: to)}
+  end
+
+  def handle_event("clicked", params, socket) do
+    IO.puts("Button clicked in component, params: #{inspect(params)}")
+    {:noreply, socket}
+  end
+
+  # def handle_event(event, params, socket) do
+  #   IO.puts("event: #{inspect(event)}, params: #{inspect(params)}")
+  #   {:noreply, socket}
+  # end
+end
+
 defmodule CrellWeb.LiveDashboard.Tracing do
   require Logger
   use Phoenix.LiveDashboard.PageBuilder
@@ -6,9 +56,9 @@ defmodule CrellWeb.LiveDashboard.Tracing do
   use Phoenix.LiveDashboard.Web, :live_component
 
   @impl true
-  def init(_) do
-    modules = []
-    {:ok, %{modules: modules, active_traces: []}}
+  def init(init_args) do
+    IO.inspect("init_args: #{inspect(init_args)}")
+    {:ok, %{}}
   end
 
   @impl true
@@ -75,6 +125,7 @@ defmodule CrellWeb.LiveDashboard.Tracing do
 
     assigns
     |> Map.put(:table_params, table_params)
+
     # |> Map.delete(:col)
     # |> Map.put(:columns, columns)
   end
@@ -82,19 +133,22 @@ defmodule CrellWeb.LiveDashboard.Tracing do
   @impl true
   def mount(_params, _assigns, socket) do
     modules =
-      case socket.assigns.page.node == Node.self do
+      case socket.assigns.page.node == Node.self() do
         true ->
           :code.all_loaded()
+
         false ->
           case :erpc.call(socket.assigns.page.node, :code, :all_loaded, []) do
             modules when is_list(modules) ->
               modules
+
             term ->
               Logger.error("Failed to fetch modules : #{inspect(term)}")
               []
           end
       end
-    {:ok, assign(socket, %{ :modules => modules })}
+
+    {:ok, assign(socket, %{:modules => modules})}
   end
 
   @impl true
@@ -107,28 +161,37 @@ defmodule CrellWeb.LiveDashboard.Tracing do
 
   @impl true
   def render(assigns) do
+    # IO.inspect(assigns, label: "Assigns")
 
-    IO.inspect(assigns, label: "Assigns")
+    # ~H"""
+    #   <select>
+    #     <%= for {module_name, _module_path} <- assigns.modules do %>
+    #       <option>
+    #         <%= module_name %>
+    #       </option>
+    #     <% end %>
+    #   </select>
+    #   <label for="module_filter">Module filter</label>
+    #   <input phx-change="search" phx-submit="search" phx-target={@myself} type="text" name="module_filter" id="module_filter" />
+    # """
 
     ~H"""
-      <select>
-        <%= for {module_name, _module_path} <- assigns.modules do %>
-          <option>
-            <%= module_name %>
-          </option>
-        <% end %>
-      </select>
-      <label for="module_filter">Module filter</label>
-      <input phx-change="search" phx-submit="search" phx-target={@myself} type="text" name="module_filter" id="module_filter" />
+    <div>
+      <.live_component
+        modules={assigns.modules}
+        module={MyApp.MyComponent}
+        id="my-component"
+      />
+    </div>
     """
   end
 
   @impl true
   def handle_event("search", %{"search" => search}, socket) do
+    IO.inspect("Search from textbox222")
     # table_params = %{socket.assigns.table_params | search: search}
     table_params = %{search: search}
     to = PageBuilder.live_dashboard_path(socket, socket.assigns.page, table_params)
     {:noreply, push_patch(socket, to: to)}
   end
-
 end
