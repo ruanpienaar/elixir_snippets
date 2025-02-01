@@ -51,7 +51,7 @@ defmodule CrellWeb.Router do
       pipe_through :browser
 
       live_dashboard "/dashboard", metrics: CrellWeb.Telemetry, additional_pages: [
-        route_name: CrellWeb.LiveDashboard.Tracing
+        # route_name: CrellWeb.LiveDashboard.Tracing
       ]
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end

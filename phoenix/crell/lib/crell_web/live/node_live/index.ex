@@ -6,6 +6,7 @@ defmodule CrellWeb.NodeLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    :ok = CrellWeb.Pubsub.sub()
     {:ok, stream(socket, :nodes, Distribution.list_nodes())}
   end
 
@@ -34,9 +35,13 @@ defmodule CrellWeb.NodeLive.Index do
 
   @impl true
   def handle_info({CrellWeb.NodeLive.FormComponent, {:saved, node}}, socket) do
-    %Node{cookie: cookie, node_name: node_name} = node
-    :ok = Distribution.hawk_add_node(node_name, cookie)
+    # %Node{cookie: cookie, node_name: node_name} = node
+    :ok = Distribution.hawk_add_node(node)
     {:noreply, stream_insert(socket, :nodes, node)}
+  end
+
+  def handle_info({}, socket) do
+    {:noreply, stream(socket, :nodes, Distribution.list_nodes())}
   end
 
   @impl true

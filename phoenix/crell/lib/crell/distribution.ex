@@ -69,7 +69,7 @@ defmodule Crell.Distribution do
   """
   def update_node(%CrellNode{} = node, attrs) do
     node
-    |> CrellNode.changeset(attrs)
+    |> change_node(attrs)
     |> Repo.update()
   end
 
@@ -108,17 +108,42 @@ defmodule Crell.Distribution do
     Node.list([:visible, :hidden])
   end
 
-  def hawk_add_node(node_name, cookie) when is_binary(node_name) and is_binary(cookie) do
+  def set_node_connected(id) do
+    set_node_connected(id, true)
+  end
+
+  def set_node_disconnected(id) do
+    set_node_connected(id, false)
+  end
+
+  defp set_node_connected(id, connected?) do
+    IO.inspect("Setting node #{id} as connected? #{inspect(connected?)}")
+    {:ok, _} = Crell.Distribution.update_node(
+      get_node!(id),
+      %{ connected: connected? }
+    )
+  end
+
+  def hawk_add_node(%CrellNode{id: id, node_name: node_name, cookie: cookie}) do
     node_atom = String.to_atom(node_name)
     cookie_atom = String.to_atom(cookie)
-    connected_callback = fn -> :io.format(~c"Node connected") end
-    disconnected_callback = fn -> :io.format(~c"Node disconnected") end
 
-    connected_callbacks = [{:crell_connect, connected_callback}]
-    disconnected_callbacks = [{:crell_disconnect,disconnected_callback}]
+    connected_callbacks = [
+      {:crell_connect, fn ->
+        {:ok, _} = set_node_connected(id)
+        :ok = CrellWeb.Pubsub.broadcast()
+        :ok
+      end}
+    ]
+    disconnected_callbacks = [
+      {:crell_disconnect, fn ->
+        {:ok, _} = set_node_disconnected(id)
+        :ok = CrellWeb.Pubsub.broadcast()
+        :ok
+      end}
+    ]
 
-    case :hawk.node_exists(node_atom) do
-      {:ok, _pid, callbacks} ->
+    case :hawk.node_exists(node_atom) do {:ok, _pid, callbacks} ->
         case :lists.member(:crell_connect, callbacks) and :lists.member(:crell_disconnect, callbacks) do
           true ->
             :ok
